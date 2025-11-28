@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konverter IPv6 Hexadecimal ke Biner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .converter-container {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .table-container {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffcc00;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            color: #333;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #ffcc00;
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #ffd633;
+            transform: translateY(-3px);
+        }
+        
+        .result-container {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        
+        .result-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #ffcc00;
+            text-align: center;
+        }
+        
+        .conversion-steps {
+            margin-top: 20px;
+        }
+        
+        .step {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #4dffea;
+        }
+        
+        .binary-output {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            color: #ff9966;
+            word-break: break-all;
+        }
+        
+        .hex-output {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            color: #4dffea;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th {
+            background: rgba(255, 204, 0, 0.3);
+            padding: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s;
+        }
+        
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .hex-value {
+            font-weight: bold;
+            color: #4dffea;
+        }
+        
+        .binary-value {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            color: #ff9966;
+        }
+        
+        .decimal-value {
+            color: #99ff99;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .info-card h3 {
+            color: #ffcc00;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .info-card p {
+            line-height: 1.5;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Konverter IPv6 Hexadecimal ke Biner</h1>
+            <p class="subtitle">Alat untuk mengonversi alamat IPv6 dari format hexadecimal ke biner</p>
+        </header>
+        
+        <div class="content">
+            <div class="converter-container">
+                <h2>Konverter IPv6</h2>
+                
+                <div class="input-group">
+                    <label for="ipv6-input">Masukkan Alamat IPv6:</label>
+                    <input type="text" id="ipv6-input" placeholder="Contoh: fe80::c0c1:f366:1b9:3e7e" value="fe80::c0c1:f366:1b9:3e7e">
+                </div>
+                
+                <button id="convert-btn">Konversi ke Biner</button>
+                
+                <div class="result-container">
+                    <div class="result-title">Hasil Konversi:</div>
+                    <div id="result-area">
+                        <p>Masukkan alamat IPv6 dan klik tombol konversi</p>
+                    </div>
+                    
+                    <div class="conversion-steps" id="steps-area">
+                        <!-- Langkah-langkah konversi akan ditampilkan di sini -->
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h3>Cara Penggunaan:</h3>
+                    <p>1. Masukkan alamat IPv6 dalam format hexadecimal (bisa lengkap atau disingkat dengan ::)</p>
+                    <p>2. Klik tombol "Konversi ke Biner"</p>
+                    <p>3. Lihat hasil konversi dan langkah-langkah detailnya</p>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <h2>Tabel Konversi Heksadesimal-Biner</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Heksadesimal</th>
+                            <th>Biner (4-bit)</th>
+                            <th>Desimal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div class="hex-value">0</div></td>
+                            <td><div class="binary-value">0000</div></td>
+                            <td><div class="decimal-value">0</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">1</div></td>
+                            <td><div class="binary-value">0001</div></td>
+                            <td><div class="decimal-value">1</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">2</div></td>
+                            <td><div class="binary-value">0010</div></td>
+                            <td><div class="decimal-value">2</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">3</div></td>
+                            <td><div class="binary-value">0011</div></td>
+                            <td><div class="decimal-value">3</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">4</div></td>
+                            <td><div class="binary-value">0100</div></td>
+                            <td><div class="decimal-value">4</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">5</div></td>
+                            <td><div class="binary-value">0101</div></td>
+                            <td><div class="decimal-value">5</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">6</div></td>
+                            <td><div class="binary-value">0110</div></td>
+                            <td><div class="decimal-value">6</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">7</div></td>
+                            <td><div class="binary-value">0111</div></td>
+                            <td><div class="decimal-value">7</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">8</div></td>
+                            <td><div class="binary-value">1000</div></td>
+                            <td><div class="decimal-value">8</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">9</div></td>
+                            <td><div class="binary-value">1001</div></td>
+                            <td><div class="decimal-value">9</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">A</div></td>
+                            <td><div class="binary-value">1010</div></td>
+                            <td><div class="decimal-value">10</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">B</div></td>
+                            <td><div class="binary-value">1011</div></td>
+                            <td><div class="decimal-value">11</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">C</div></td>
+                            <td><div class="binary-value">1100</div></td>
+                            <td><div class="decimal-value">12</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">D</div></td>
+                            <td><div class="binary-value">1101</div></td>
+                            <td><div class="decimal-value">13</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">E</div></td>
+                            <td><div class="binary-value">1110</div></td>
+                            <td><div class="decimal-value">14</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="hex-value">F</div></td>
+                            <td><div class="binary-value">1111</div></td>
+                            <td><div class="decimal-value">15</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="info-card">
+                    <h3>Format Alamat IPv6:</h3>
+                    <p>• IPv6 terdiri dari 8 kelompok heksadesimal (masing-masing 16-bit)</p>
+                    <p>• Setiap kelompok dipisahkan oleh titik dua (:)</p>
+                    <p>• Kelompok yang berisi nol berurutan dapat disingkat dengan "::"</p>
+                    <p>• Contoh: fe80:0000:0000:0000:c0c1:f366:01b9:3e7e</p>
+                    <p>• Disingkat: fe80::c0c1:f366:1b9:3e7e</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Konverter IPv6 Hexadecimal ke Biner | Alat Pembelajaran Jaringan Komputer</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const convertBtn = document.getElementById('convert-btn');
+            const ipv6Input = document.getElementById('ipv6-input');
+            const resultArea = document.getElementById('result-area');
+            const stepsArea = document.getElementById('steps-area');
+            
+            // Tabel konversi hexadecimal ke biner
+            const hexToBinTable = {
+                '0': '0000', '1': '0001', '2': '0010', '3': '0011',
+                '4': '0100', '5': '0101', '6': '0110', '7': '0111',
+                '8': '1000', '9': '1001', 'a': '1010', 'b': '1011',
+                'c': '1100', 'd': '1101', 'e': '1110', 'f': '1111'
+            };
+            
+            convertBtn.addEventListener('click', function() {
+                const ipv6Address = ipv6Input.value.trim().toLowerCase();
+                
+                if (!ipv6Address) {
+                    resultArea.innerHTML = '<p style="color: #ff6666;">Masukkan alamat IPv6 terlebih dahulu!</p>';
+                    stepsArea.innerHTML = '';
+                    return;
+                }
+                
+                try {
+                    // Ekspansi alamat IPv6 (tangani notasi ::)
+                    const expandedAddress = expandIPv6(ipv6Address);
+                    
+                    // Konversi ke biner
+                    const binaryResult = convertIPv6ToBinary(expandedAddress);
+                    
+                    // Tampilkan hasil
+                    displayResults(expandedAddress, binaryResult);
+                    
+                } catch (error) {
+                    resultArea.innerHTML = `<p style="color: #ff6666;">Error: ${error.message}</p>`;
+                    stepsArea.innerHTML = '';
+                }
+            });
+            
+            function expandIPv6(address) {
+                // Jika tidak ada ::, langsung kembalikan alamat
+                if (address.indexOf('::') === -1) {
+                    return address;
+                }
+                
+                // Pisahkan bagian sebelum dan setelah ::
+                const parts = address.split('::');
+                const leftParts = parts[0] ? parts[0].split(':') : [];
+                const rightParts = parts[1] ? parts[1].split(':') : [];
+                
+                // Hitung berapa banyak kelompok yang hilang
+                const missingGroups = 8 - (leftParts.length + rightParts.length);
+                
+                if (missingGroups < 0) {
+                    throw new Error('Format IPv6 tidak valid: terlalu banyak kelompok');
+                }
+                
+                // Buat array dengan kelompok yang hilang diisi dengan '0000'
+                const expandedGroups = [...leftParts];
+                for (let i = 0; i < missingGroups; i++) {
+                    expandedGroups.push('0000');
+                }
+                expandedGroups.push(...rightParts);
+                
+                // Format setiap kelompok menjadi 4 digit hexadecimal
+                const formattedGroups = expandedGroups.map(group => {
+                    // Isi dengan leading zero jika perlu
+                    return group.padStart(4, '0');
+                });
+                
+                return formattedGroups.join(':');
+            }
+            
+            function convertIPv6ToBinary(expandedAddress) {
+                const groups = expandedAddress.split(':');
+                const binaryGroups = [];
+                
+                for (let i = 0; i < groups.length; i++) {
+                    const group = groups[i];
+                    let binaryGroup = '';
+                    
+                    // Konversi setiap karakter dalam kelompok
+                    for (let j = 0; j < group.length; j++) {
+                        const hexChar = group[j];
+                        binaryGroup += hexToBinTable[hexChar] || '????';
+                    }
+                    
+                    binaryGroups.push(binaryGroup);
+                }
+                
+                return binaryGroups;
+            }
+            
+            function displayResults(expandedAddress, binaryGroups) {
+                // Tampilkan alamat yang sudah diperluas
+                resultArea.innerHTML = `
+                    <div class="step">
+                        <div class="step-title">Alamat IPv6 (diperluas):</div>
+                        <div class="hex-output">${expandedAddress}</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-title">Hasil Konversi Biner:</div>
+                        <div class="binary-output">${binaryGroups.join(' : ')}</div>
+                    </div>
+                `;
+                
+                // Tampilkan langkah-langkah konversi per kelompok
+                stepsArea.innerHTML = '<div class="step-title">Langkah-langkah Konversi:</div>';
+                
+                const groups = expandedAddress.split(':');
+                
+                for (let i = 0; i < groups.length; i++) {
+                    const group = groups[i];
+                    const binaryGroup = binaryGroups[i];
+                    
+                    let stepHTML = `<div class="step">
+                        <div class="step-title">Kelompok ${i+1}: ${group}</div>
+                        <div>`;
+                    
+                    // Tampilkan konversi per karakter
+                    for (let j = 0; j < group.length; j++) {
+                        const hexChar = group[j];
+                        const binValue = hexToBinTable[hexChar];
+                        stepHTML += `<div>${hexChar} → ${binValue}</div>`;
+                    }
+                    
+                    stepHTML += `<div><strong>Hasil: ${binaryGroup}</strong></div>
+                        </div>
+                    </div>`;
+                    
+                    stepsArea.innerHTML += stepHTML;
+                }
+            }
+            
+            // Konversi contoh saat halaman dimuat
+            convertBtn.click();
+        });
+    </script>
+</body>
+</html>
